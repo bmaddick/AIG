@@ -1,10 +1,13 @@
+import Image from "next/image";
+
 interface ArticleCard {
   category: string;
   title: string;
   excerpt: string;
   author: string;
   date: string;
-  imageLabel: string;
+  imageUrl: string;
+  imageAlt: string;
 }
 
 const featuredArticles: ArticleCard[] = [
@@ -14,7 +17,8 @@ const featuredArticles: ArticleCard[] = [
     excerpt: "A comprehensive look at what the fossil record actually demonstrates about the history of life on earth.",
     author: "Dr. Andrew Snelling",
     date: "March 13, 2026",
-    imageLabel: "Fossils",
+    imageUrl: "https://images.unsplash.com/photo-1565793141104-0ef675e5162d?w=600&q=80&fit=crop",
+    imageAlt: "Dinosaur skeleton fossil display",
   },
   {
     category: "Bible",
@@ -22,7 +26,8 @@ const featuredArticles: ArticleCard[] = [
     excerpt: "Understanding why the foundation of Scripture is essential for every believer and every church.",
     author: "Ken Ham",
     date: "March 12, 2026",
-    imageLabel: "Bible Study",
+    imageUrl: "https://images.unsplash.com/photo-1593485589800-579b43749b15?w=600&q=80&fit=crop",
+    imageAlt: "Open Bible on a field",
   },
   {
     category: "Science",
@@ -30,7 +35,8 @@ const featuredArticles: ArticleCard[] = [
     excerpt: "How genetics confirms the biblical teaching that all humans are descended from one couple.",
     author: "Dr. Nathaniel Jeanson",
     date: "March 11, 2026",
-    imageLabel: "DNA",
+    imageUrl: "https://images.unsplash.com/photo-1530473744149-142a02a2d565?w=600&q=80&fit=crop",
+    imageAlt: "Geological rock formations",
   },
   {
     category: "Culture",
@@ -38,7 +44,8 @@ const featuredArticles: ArticleCard[] = [
     excerpt: "Practical ways Christians can stand firm in an increasingly secular culture while sharing truth.",
     author: "Avery Foley",
     date: "March 10, 2026",
-    imageLabel: "Culture",
+    imageUrl: "https://images.unsplash.com/photo-1753714912908-502e58a83de2?w=600&q=80&fit=crop",
+    imageAlt: "Milky Way over dark mountain landscape",
   },
   {
     category: "Morality",
@@ -46,7 +53,8 @@ const featuredArticles: ArticleCard[] = [
     excerpt: "Without a biblical foundation, morality becomes subjective and relative. Here is why it matters.",
     author: "Dr. Georgia Purdom",
     date: "March 9, 2026",
-    imageLabel: "Ethics",
+    imageUrl: "https://images.unsplash.com/photo-1593485589800-579b43749b15?w=600&q=80&fit=crop&crop=top",
+    imageAlt: "Open Bible",
   },
   {
     category: "History",
@@ -54,16 +62,23 @@ const featuredArticles: ArticleCard[] = [
     excerpt: "Examining geological and historical evidence that points to a worldwide flood as described in Genesis.",
     author: "Dr. Tim Clarey",
     date: "March 8, 2026",
-    imageLabel: "Geology",
+    imageUrl: "https://images.unsplash.com/photo-1530473744149-142a02a2d565?w=600&q=80&fit=crop&crop=bottom",
+    imageAlt: "Basalt rock columns",
   },
 ];
 
 function ArticleCardComponent({ article }: { article: ArticleCard }) {
   return (
     <a href="#" className="group block bg-white rounded-lg shadow-sm border border-aig-border overflow-hidden hover:shadow-md transition-shadow">
-      {/* Image Placeholder */}
-      <div className="aspect-video bg-gradient-to-br from-aig-teal/10 to-aig-navy/10 flex items-center justify-center">
-        <span className="text-aig-gray/40 text-sm">{article.imageLabel}</span>
+      {/* Article Image */}
+      <div className="relative aspect-video">
+        <Image
+          src={article.imageUrl}
+          alt={article.imageAlt}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
       </div>
       {/* Content */}
       <div className="p-4">

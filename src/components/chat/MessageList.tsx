@@ -1,7 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ComponentPropsWithoutRef } from "react";
+import ReactMarkdown from "react-markdown";
 import type { ChatMessage } from "@/types/api";
+
+const markdownComponents = {
+  a: ({ children, href, ...props }: ComponentPropsWithoutRef<"a">) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#00546B] underline hover:text-[#007a9a]"
+      {...props}
+    >
+      {children}
+    </a>
+  ),
+};
 
 interface MessageListProps {
   messages: ChatMessage[];
@@ -41,14 +56,22 @@ export default function MessageList({ messages, streamingContent, isStreaming }:
                 : "bg-zinc-100 text-zinc-800 rounded-bl-md"
             }`}
           >
-            <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+            {msg.role === "user" ? (
+              <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+            ) : (
+              <div className="prose prose-sm prose-zinc max-w-none prose-headings:text-base prose-headings:font-semibold prose-headings:mt-3 prose-headings:mb-1 prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-blockquote:my-2 prose-blockquote:border-[#00546B]/30 prose-blockquote:text-zinc-600 prose-a:text-[#00546B] prose-strong:text-zinc-900">
+                <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
+              </div>
+            )}
           </div>
         </div>
       ))}
       {isStreaming && streamingContent && (
         <div className="flex justify-start">
           <div className="max-w-[80%] rounded-2xl rounded-bl-md bg-zinc-100 px-4 py-2.5 text-sm leading-relaxed text-zinc-800">
-            <p className="whitespace-pre-wrap break-words">{streamingContent}</p>
+            <div className="prose prose-sm prose-zinc max-w-none prose-headings:text-base prose-headings:font-semibold prose-headings:mt-3 prose-headings:mb-1 prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-blockquote:my-2 prose-blockquote:border-[#00546B]/30 prose-blockquote:text-zinc-600 prose-a:text-[#00546B] prose-strong:text-zinc-900">
+              <ReactMarkdown components={markdownComponents}>{streamingContent}</ReactMarkdown>
+            </div>
             <span className="inline-block h-4 w-1 animate-pulse bg-zinc-400 ml-0.5" />
           </div>
         </div>

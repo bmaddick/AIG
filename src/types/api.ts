@@ -64,6 +64,9 @@ export interface SendMessageRequest {
   message: {
     content: string;
   };
+  options?: {
+    includedDomains?: string[];
+  };
 }
 
 export interface SendIncognitoRequest {

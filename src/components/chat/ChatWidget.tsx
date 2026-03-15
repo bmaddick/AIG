@@ -72,10 +72,12 @@ export default function ChatWidget() {
       abortRef.current = controller;
 
       try {
-        const endpoint = isIncognito ? "/api/chat/incognito" : "/api/chat/send";
-        const body = isIncognito
+        // Use incognito endpoint for new chats (no activeChatId yet)
+        const useIncognito = isIncognito || !activeChatId;
+        const endpoint = useIncognito ? "/api/chat/incognito" : "/api/chat/send";
+        const body = useIncognito
           ? { message: { content } }
-          : { chatId: activeChatId ?? "", message: { content } };
+          : { chatId: activeChatId, message: { content } };
 
         const res = await fetch(endpoint, {
           method: "POST",
@@ -112,14 +114,20 @@ export default function ChatWidget() {
 
               try {
                 const parsed = JSON.parse(data);
-                const text = parsed.content ?? parsed.data ?? parsed.text;
+                // Dominion SSE format: {"type":"text_delta","data":{"delta":"..."}}
+                const text =
+                  parsed.data?.delta ??
+                  parsed.content ??
+                  (typeof parsed.data === "string" ? parsed.data : null) ??
+                  parsed.text;
                 if (typeof text === "string" && text.length > 0) {
                   accumulated += text;
                   setStreamingContent(accumulated);
                 }
-                // Capture chatId from stream if starting a new chat
-                if (parsed.chatId && !activeChatId && !isIncognito) {
-                  newChatId = parsed.chatId;
+                // Capture chatId from metadata event or inline field
+                const chatIdVal = parsed.data?.chatId ?? parsed.chatId;
+                if (chatIdVal && !activeChatId && !isIncognito) {
+                  newChatId = chatIdVal;
                 }
               } catch {
                 if (data.length > 0) {

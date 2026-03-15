@@ -44,6 +44,7 @@ async function authedFetch(
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "x-client-user-id": "aig-demo-visitor",
         ...options.headers,
       },
     });
